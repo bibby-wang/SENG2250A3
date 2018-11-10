@@ -3,22 +3,25 @@ import java.security.*;
 import java.math.*;
 import java.util.*;
 import javax.crypto.*;
+import javax.crypto.spec.*;
 
 public class User{
 	String name;
 	private KeyPair keyPairRSA;
 	private KeyPair keyPairDH;
-	private SecretKey shareSecretKey;
+
 	private int privateNum;
+	private BigInteger generatorNum;
+	private BigInteger primeNum;
 
+	private SecretKey sharesecurityKey;	
 
+	//from other user
+	private PublicKey otherPublicRSA;
+	private BigInteger numberGY;
 	//private KeyPair ssKeyAg;
 	
-	private BigInteger generatorNum;
 
-	private BigInteger numberGY;
-	private BigInteger primeNum;
-	
 	public User(){
 		generatorNum= BigInteger.probablePrime(1024,new SecureRandom());
 		primeNum= BigInteger.probablePrime(1024,new SecureRandom());
@@ -38,61 +41,52 @@ public class User{
 	}
 	
 	// signature 
-	public byte[] signature(BigInteger sessionKey){
+	public byte[] signature(BigInteger id){
 		byte[] tempByte = null;
 		try {
 			PrivateKey privateRSA=keyPairRSA.getPrivate();
-			Signature sign = Signature.getInstance("SHA256withRSA");
-			sign.initSign(privateRSA,new SecureRandom());
-			sign.update(sessionKey.toByteArray());
-			tempByte = sign.sign();
+			Signature digitalSignature = Signature.getInstance("SHA256withRSA");
+			digitalSignature.initSign(privateRSA,new SecureRandom());
+			digitalSignature.update(id.toByteArray());
+			tempByte = digitalSignature.sign();
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 		return tempByte;
 	}
 	
 	// verify
-	public boolean verify(byte[] singData){
+	public boolean verify(byte[] signData){
 		boolean tempBoolean=false;
 		try{
-			PrivateKey privateRSA=keyPairRSA.getPrivate();
-			Signature sing = Signature.getInstance("SHA256withRSA");
-		
-			//sing.updata(sessionKey.toByteArray());
-			tempBoolean=sing.verify(singData);
+			//link two bigints
+			BigInteger all=new BigInteger(this.getGX().toString()+ numberGY.toString());
+			Signature digitalSignature = Signature.getInstance("SHA256withRSA");
+			digitalSignature.initVerify(otherPublicRSA);
+			digitalSignature.update(all.toByteArray());
+			tempBoolean=digitalSignature.verify(signData);
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 		return tempBoolean;
 	}
-	// set the ShareSecretKey by other user's public key
-	public void setShareSecretKey(PublicKey publicKey){
-		PrivateKey privateDH=keyPairDH.getPrivate();
-		try {
-			
 
-			
-			
-		} catch (Exception e) {
-			
-		}
-		
-		//shareSecretKey=;
-	}	
-	
 		
 	
-	// get generator number
-	public void setGenNum(BigInteger gy){
+	// set generator number from other user
+	public void setGYNum(BigInteger gy){
 		numberGY=gy;
+	}
+	// set PublicRSA key from other user
+	public void setOtherPublicRSA(PublicKey publickey){
+		otherPublicRSA=publickey;
 	}
 	
 	// SecureRandom
-	public int getX(){
-		return privateNum;
+	// public int getX(){
+		// return privateNum;
 		
-	}	
+	// }	
 	// get g^x number
 	public BigInteger getGX(){
 		return generatorNum.pow(privateNum);
@@ -118,18 +112,80 @@ public class User{
 	public PublicKey getDHPublicKey(){
 		return keyPairDH.getPublic();
 	}
+	// set the ShareSecretKey by other user's public key
+	public void setShareSecretKey(PublicKey publicKey){
+		PrivateKey privateDH=keyPairDH.getPrivate();
+		try {
+			SecretKeyFactory secretKeyFactory= SecretKeyFactory.getInstance("DESede");
+			KeyAgreement keyAgreement = KeyAgreement.getInstance("DH");
+			keyAgreement.init(privateDH);
+			keyAgreement.doPhase(publicKey,true);
+			
+			sharesecurityKey =secretKeyFactory.generateSecret(new DESedeKeySpec(keyAgreement.generateSecret()));
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-
+		
+	}
+	public SecretKey getsKey(){return sharesecurityKey;}
 	
-	//get the RSA key public and privet
-	private static KeyPair generateKeyPair(int keyLength,String type)
-	{
+	
+     // Encrypt message
+	public byte[] encryptMessage(String message){
+		byte[] tempMesssage = message.getBytes();
+		byte[] nonceCountByte=new byte[16];
+		byte[] cipherByte=new byte[64];
+		
+		try{
+			Cipher cipher = Cipher.getInstance("DESede");
+			//get nonce(iv) 
+			//nonce+count
+			//
+			
+			
+			
+			
+			
+			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv.getBytes());
+			cipher.init(Cipher.ENCRYPT_MODE, sharesecurityKey, ivParameterSpec);
+			
+			cipher.init(Cipher.ENCRYPT_MODE, sharesecurityKey);
+			return cipher.doFinal(tempMesssage);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return tempMesssage;
+	}		
+
+    // Decrypt message
+	public byte[] decryptMessage(byte[] message){
+		byte[] tempMesssage=message;
+		try{
+			Cipher cipher = Cipher.getInstance("DESede");
+			cipher.init(Cipher.DECRYPT_MODE, sharesecurityKey);
+			//return cipher.getAlgorithm();
+			tempMesssage=cipher.doFinal(message);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		//return cipher.getAlgorithm();
+		return tempMesssage;
+	}
+	
+
+	//get the "type" key public and privet
+	private static KeyPair generateKeyPair(int keyLength,String type){
 		try
 		{
 			KeyPairGenerator keyPair = KeyPairGenerator.getInstance(type);
 			keyPair.initialize(keyLength);
 			return keyPair.genKeyPair();
 		} catch (Exception e){
+			e.printStackTrace();
 			return null;
 		}
 	}
