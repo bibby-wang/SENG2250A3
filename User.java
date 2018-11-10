@@ -6,7 +6,7 @@ import javax.crypto.*;
 import javax.crypto.spec.*;
 
 public class User{
-	String name;
+	private String name;
 	private KeyPair keyPairRSA;
 	private KeyPair keyPairDH;
 
@@ -15,7 +15,7 @@ public class User{
 	private BigInteger primeNum;
 
 	private SecretKey sharesecurityKey;	
-
+	private IvParameterSpec ivPS;
 	//from other user
 	private PublicKey otherPublicRSA;
 	private BigInteger numberGY;
@@ -26,6 +26,7 @@ public class User{
 		generatorNum= BigInteger.probablePrime(1024,new SecureRandom());
 		primeNum= BigInteger.probablePrime(1024,new SecureRandom());
 		privateNum=new SecureRandom().nextInt(20)+2;
+		
 	}
 	
 	public User(String name){
@@ -33,6 +34,8 @@ public class User{
 		this.name=name;
 
 	}
+	//get name
+	public String getName(){return name;};
 	// make the keys
 	public void makeKeys(int size){
 		keyPairRSA = generateKeyPair(size,"RSA");
@@ -122,7 +125,8 @@ public class User{
 			keyAgreement.doPhase(publicKey,true);
 			
 			sharesecurityKey =secretKeyFactory.generateSecret(new DESedeKeySpec(keyAgreement.generateSecret()));
-			
+
+
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -130,8 +134,17 @@ public class User{
 		
 		
 	}
-	public SecretKey getsKey(){return sharesecurityKey;}
-	
+	public void newNonce(){
+
+        Random random = new Random();
+		byte[] nonceByte= new byte[8];
+		for (int i=0;i<8;i++){
+			Integer iv = random.nextInt(15);
+			//System.out.println(i+" == "+iv);
+			nonceByte[i]=iv.byteValue();
+		}
+		ivPS = new IvParameterSpec(nonceByte);
+	}
 	
      // Encrypt message
 	public byte[] encryptMessage(String message){
@@ -140,19 +153,11 @@ public class User{
 		byte[] cipherByte=new byte[64];
 		
 		try{
-			Cipher cipher = Cipher.getInstance("DESede");
-			//get nonce(iv) 
-			//nonce+count
-			//
+			Cipher cipher = Cipher.getInstance("DESede/CTR/NoPadding");
+
+			cipher.init(Cipher.ENCRYPT_MODE, sharesecurityKey, ivPS);
 			
-			
-			
-			
-			
-			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv.getBytes());
-			cipher.init(Cipher.ENCRYPT_MODE, sharesecurityKey, ivParameterSpec);
-			
-			cipher.init(Cipher.ENCRYPT_MODE, sharesecurityKey);
+			//cipher.init(Cipher.ENCRYPT_MODE, sharesecurityKey);
 			return cipher.doFinal(tempMesssage);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -165,8 +170,12 @@ public class User{
 	public byte[] decryptMessage(byte[] message){
 		byte[] tempMesssage=message;
 		try{
-			Cipher cipher = Cipher.getInstance("DESede");
-			cipher.init(Cipher.DECRYPT_MODE, sharesecurityKey);
+			Cipher cipher = Cipher.getInstance("DESede/CTR/NoPadding");
+			
+
+			
+			cipher.init(Cipher.DECRYPT_MODE, sharesecurityKey, ivPS);
+			//cipher.init(Cipher.DECRYPT_MODE, sharesecurityKey);
 			//return cipher.getAlgorithm();
 			tempMesssage=cipher.doFinal(message);
 		}catch (Exception e) {
