@@ -1,4 +1,4 @@
-SENG2250 System and Network Security
+﻿SENG2250 System and Network Security
 School of Electrical Engineering and Computing
 Semester 2, 2018
 Assignment 3 (25 marks, 25%) - Due: Friday, 9 November, 16:59
@@ -14,97 +14,79 @@ This assignment aims at
 3）实施基本安全协议，以进一步了解实际安全握手工作流程。
 
 Tasks 1: Secure Cloud-Based RFID Supply Chain System Design (13 marks)
-Radio Frequency Identification (RFID) has been widely adopted for object identification. 
- An RFID system comprises three essential components, namely RFID tags, readers and a backend server. 
- An RFID tag is associated with a unique identifier which is allocated by the backend server. 
- A typical RFID system is established by a single party who initiates the secret keys. 
- To identify a tag, a reader communicates with the tag and sends the tag's response to the backend server. 
- The server checks the tag's identity by using the shared keys and informs the reader whether the tag is valid. 
- Conventionally,the system is considered to be controlled by a single party who maintains all the secret information. 
-But, in some practical scenarios, RFID tags, readers and servers could be operated by different parties. 
 任务1：安全的基于云的RFID供应链系统设计（13分）
-射频识别（RFID）已被广泛用于物体识别。
-RFID系统包括三个基本组件，即RFID标签，读取器和后端服务器。
-RFID标签与由后端服务器分配的唯一标识符相关联。
-典型的RFID系统由发起密钥的单方建立。
-为了识别标签，练习与标签通信并将标签的响应发送到后端服务器。
-服务器使用共享密钥检查标签的标识，并通知读者标签是否有效。
-按照惯例，该系统被认为由维护所有秘密信息的单方控制。
-但是，在一些实际情况中，RFID标签，读取器和服务器可以由不同方操作
-Supply chain is a popular application of RFID techniques. 
- Roughly speaking, each of goods will be attached by an RFID tag which has a unique identifier. 
- By using (mutual) authentication protocols between RFID reader, tag and server, it allows user to identify and trace the location of particular object. 
- Note that the reader, server and tag might be owned by different parties. 
+Radio Frequency Identification (RFID) has been widely adopted for object identification.  An RFID system comprises three essential components, namely RFID tags, readers and a backend server.  An RFID tag is associated with a unique identifier which is allocated by the backend server.  A typical RFID system is established by a single party who initiates the secret keys.  To identify a tag, a reader communicates with the tag and sends the tag's response to the backend server.  The server checks the tag's identity by using the shared keys and informs the reader whether the tag is valid.  
 
-Cloud-based RFID supply chain system provides various services. 
- We describe entities of this system as following. 
+射频识别（RFID）已被广泛用于物体识别。 RFID系统包括三个基本组件，即RFID标签，读取器和后端服务器。 RFID标签与由后端服务器分配的唯一标识符相关联。 典型的RFID系统由发起密钥的单方建立。 为了识别标签，阅读器与标签通信并将标签的响应发送到后端服务器。 服务器使用共享密钥检查标签的标识，并通知读者标签是否有效。
+Conventionally,the system is considered to be controlled by a single party who maintains all the secret information. But, in some practical scenarios, RFID tags, readers and servers could be operated by different parties. 
+
+
+按照惯例，该系统被认为由维护所有秘密信息的单方控制。但是，在一些实际情况中，RFID标签，读取器和服务器可以由不同方操作
+Supply chain is a popular application of RFID techniques.  Roughly speaking, each of goods will be attached by an RFID tag which has a unique identifier.  By using (mutual) authentication protocols between RFID reader, tag and server, it allows user to identify and trace the location of particular object.  Note that the reader, server and tag might be owned by different parties. 
+供应链是RFID技术的流行应用。 粗略地说，每个商品都将通过具有唯一标识符的RFID标签附加。 通过在RFID阅读器，标签和服务器之间使用（相互）认证协议，它允许用户识别和跟踪特定对象的位置。 请注意，阅读器，服务器和标签可能由不同方拥有。
+Cloud-based RFID supply chain system provides various services.  We describe entities of this system as following. 
+基于云的RFID供应链系统提供各种服务。 我们将该系统的实体描述如下。
 
 -- User: It is the owner of goods.  A user firstly registers to the cloud system.  Then, he/she can add information of goods into the cloud system.  Specifically, in this supply chain system, user will attach RFID tag to each of goods and input (tag, goods) information to the cloud's database. 
+- 用户：它是商品的所有者。 用户首先注册到云系统。 然后，他/她可以将商品信息添加到云系统中。 具体而言，在该供应链系统中，用户将RFID标签附加到每个商品并将输入（标签，商品）信息附加到云的数据库。
 
 For example, a stored record could express the relationship between tag's identifier and goods information. User does not necessarily need to know the secret key of each tag, instead he/she will delegate this key management task to the cloud system. 
-供应链是RFID技术的流行应用。
- 粗略地说，每个商品都将通过具有唯一标识符的RFID标签附加。 通过在RFID阅读器，标签和服务器之间使用（相互）认证协议，它允许用户识别和跟踪特定对象的位置。 请注意，阅读器，服务器和标签可能由不同方拥有。
-
-基于云的RFID供应链系统提供各种服务。 我们将该系统的实体描述如下。
-
--用户：它是商品的所有者。 用户首先注册到云系统。 然后，他/她可以将商品信息添加到云系统中。 具体而言，在该供应链系统中，用户将RFID标签附加到每个商品并将输入（标签，商品）信息附加到云的数据库。
 
 例如，存储的记录可以表示标签的标识符和商品信息之间的关系。 用户不一定需要知道每个标签的密钥，而是将他/她将该密钥管理任务委托给云系统。
--- Cloud system: It is a trusted authority which provides services for both users and couriers. 
-Basically, it has the following functionalities. 
+
+-- Cloud system: It is a trusted authority which provides services for both users and couriers. Basically, it has the following functionalities. 
 
     -- It can register a new user and provides secure user authentication for login. 
     -- It can register a courier as a client and provides secure client authentication.  Note that courier does NOT own RFID tag or its information, such as tag's identifier and the tag's location. 
-    -- It allows a user to authorise a courier to manage/access particular group of RFID tags when the courier is delivering the goods. 
- That is, courier will be allowed to gather tag information. 
+    -- It allows a user to authorise a courier to manage/access particular group of RFID tags when the courier is delivering the goods.  That is, courier will be allowed to gather tag information. 
     -- It provides key management for tags.  Cloud system may generate, transfer and maintain tag secret keys, but it is not a mandatory requirement. Whether cloud system knows tag's secret (keys) or not will be determined by underlying cryptographic techniques. 
-
     -- It can help authorised client (courier) to identify (authenticate) RFID tags.  Cloud system will involve RFID tag authentication then responds the result to auhorised client. 
 
 - 云系统：它是一个值得信赖的机构，为用户和快递员提供服务。基本上，它具有以下功能。
 
      - 它可以注册新用户并为登录提供安全的用户身份验证。
-     - 它可以将快递员注册为客户端，并提供安全的客户端身份验证。 请注意，快递员不拥有RFID标签或其信息，例如标签的标识符和标签地点。
+     - 它可以将快递员注册为客户端，并提供安全的客户端身份验证。请注意，快递员不拥有RFID标签或其信息，例如标签的标识符和标签的位置。
+     - 当快递员交付货物时，它允许用户授权快递员管理/访问特定的RFID标签组。也就是说，将允许快递员收集标签信息。
+     - 它提供标签的密钥管理。云系统可以生成，传输和维护标签密钥，但这不是强制性要求。云系统是否知道标签的密钥（密钥）将由底层加密技术确定。
+     - 它可以帮助授权客户（快递员）识别（验证）RFID标签。云系统将涉及RFID标签认证，然后将结果响应给认证的客户端。
 
-     - 当快递员交付货物时，它允许用户授权快递员管理/访问特定的RFID标签组。 也就是说，将允许快递员收集标签信息。
+-- 快递员: It is an organisation which provides delivery services to users.  It provides an applica-tion that users can trace and collect current goods information from it.  A courier is the entity who has RFID readers. 
 
-     - 它提供标签的密钥管理。 云系统可以生成，传输和维护标签密钥，但这不是强制性要求。 云系统是否知道标签的密钥（密钥）将由底层加密技术确定。
-
-     - 它可以帮助授权客户（快递员）识别（验证）RFID标签。 云系统将涉及RFID标签认证，然后将结果响应给认证的客户端。
--- Courier: It is an organisation which provides delivery services to users.  It provides an applica-tion that users can trace and collect current goods information from it.  A courier is the entity who has RFID readers. 
-
-    -- RFID reader: It can interrogate tags, but it cannot decide whether a tag is valid or not. 
-
-Instead, reader typically transfer the information to backend server who has capability to conduct tag authentication. 
+    -- RFID reader: It can interrogate tags, but it cannot decide whether a tag is valid or not. Instead, reader typically transfer the information to backend server who has capability to conduct tag authentication. 
 
     -- RFID tag: We consider lightweight RFID tags which have limited memory and compu- tational power. 
- For example, the memory size of a tag is 1KB. 
- This memory will be used for all storage, including tag identifier, system parameters, keys, intermediate results and others. 
- More powerful tags usually mean higher cost to users.  Note that a lightweight tag does not have time system and it cannot access network. 
-- Courier：这是一个为用户提供送货服务的组织。 它提供了一个应用程序，用户可以从中跟踪和收集当前的货物信息。 快递员是拥有RFID阅读器的实体。
+ For example, the memory size of a tag is 1KB.  This memory will be used for all storage, including tag identifier, system parameters, keys, intermediate results and others. More powerful tags usually mean higher cost to users.  Note that a lightweight tag does not have time system and it cannot access network. 
+- 信使: 这是一个为用户提供送货服务的组织。 它提供了一个应用程序，用户可以从中跟踪和收集当前的货物信息。 快递员是拥有RFID阅读器的实体。
 
-     - RFID阅读器：它可以询问标签，但无法确定标签是否有效。
-
-相反，读者通常会将信息传输到有能力进行标签身份验证的后端服务器。
-
+     - RFID阅读器：它可以询问标签，但无法确定标签是否有效。 相反，读者通常会将信息传输到有能力进行标签身份验证的后端服务器。
      - RFID标签：我们认为轻量级RFID标签具有有限的内存和计算能力。
-  例如，标签的内存大小为1KB。
-  该内存将用于所有存储，包括标签标识符，系统参数，密钥，中间结果等。
-  更强大的标签通常意味着用户的成本更高。 请注意，轻量级标记没有时间系统，也无法访问网络。
+  例如，标签的内存大小为1KB。 该内存将用于所有存储，包括标签标识符，系统参数，密钥，中间结果等。 更强大的标签通常意味着用户的成本更高。 请注意，轻量级标记没有时间系统，也无法访问网络。
 
-你的任务。
-  根据以上基于云的RFID供应链系统，回答以下问题。
+
 Your Tasks. 
+你的任务。
  According to the above cloud-based RFID supply chain system, answer the following questions. 
 
+  根据以上基于云的RFID供应链系统，回答以下问题。
 1.  Analyse potential security threats and issues of this system.  Justify your answer for each.  (3 marks)
+1.分析潜在的安全威胁和该系统的问题。 为每一个证明你的答案。 （3分）
+
 2.  What technology can be used to provide client authorisation in this system? Describe the architecture in detail.  (2 marks)
+2.在该系统中可以使用哪种技术来提供客户端授权？ 详细描述架构。 （2分）
+
 3.  Design a public-key based mutual authentication protocol for tag authentication.  It should provide at least the following properties. (3 marks)
 -- Perfect forward secrecy. 
 -- Tag anonymity - only the authorised entity will be able to know whether the tag is valid or nor. 
 
 Can we use PKI to verify the public keys (for tag and server) during the protocol execution? Why? (1 mark)
 Note: You cannot use RSA based encryption/signatures, because it would be unaffordable to lightweight RFID tags. 
+3.为标签认证设计基于公钥的相互认证协议。 它应该至少提供以下属性。 （3分）
+- 完美的前瞻性保密。
+- 标记匿名 - 只有授权实体才能知道标签是有效还是无效。
+
+我们可以在协议执行期间使用PKI来验证公钥（用于标记和服务器）吗？ 为什么？ （1分）
+
+注意：您不能使用基于RSA的加密/签名，因为轻量级RFID标签将无法承受。
 
 4. Design a symmetric-key based mutual authentication protocol to satisfy the following require-ment.  (4 marks)
 -- Tag anonymity - only the authorised entity will be able to know whether the tag is valid or nor. 
@@ -115,23 +97,19 @@ Please describe the protocols as below:
 A ! B : E(skb; a0)
 A   B : E(ska; b0)
 ...
-1.分析潜在的安全威胁和该系统的问题。为每一个证明你的答案。 （3分）
-2.在该系统中可以使用哪种技术来提供客户端授权？详细描述架构。 （2分）
-3.为标签认证设计基于公钥的相互认证协议。它应该至少提供以下属性。 （3分）
-- 完美的前瞻性保密。
-- 标记匿名 - 只有授权实体才能知道标签是有效还是无效。
-
-我们可以在协议执行期间使用PKI来验证公钥（用于标记和服务器）吗？为什么？ （1分）
-注意：您不能使用基于RSA的加密/签名，因为轻量级RFID标签将无法承受。
-
 4.设计基于对称密钥的相互认证协议，以满足以下要求。 （4分）
 - 标记匿名 - 只有授权实体才能知道标签是有效还是无效。
 
 - 安全密钥更新 - 每次成功进行相互认证后，必须更新标签的密钥。考虑如何确保一致地更新共享密钥。
 提示：当标签以某种方式与服务器失步时，即它们的共享密钥变得不同，是否有任何解决方案可以帮助\重新同步“标签？
 请描述以下协议：
+A ! B : E(skb; a0)
+A   B : E(ska; b0)
+...
 
 
+
+==============================================================
 
 Tasks 2: Programming (12 marks)
 Alice and Bob intend to do message exchange. They will use the following method to establish a secure channel and exchange messages then. 
@@ -150,28 +128,25 @@ Your task: Please implement the above mechanism using C++ or Java under the foll
 
 -- Any public key encryption or digital signature scheme needed in this method will be based on RSA. 
 -- Any symmetric key encryption applied in this method will be 3-DES. 
--- Any hash function used in this method will be SHA-256. 
- You can use its implementation from external libraries. 
-
+-- Any hash function used in this method will be SHA-256.  You can use its implementation from external libraries. 
 -- Implement STS protocol.  (3 marks)
 -- Implement RSA encryption and signature, because you cannot use it directly from external libraries. (2 marks)
--- Implement 3-DES encryption.  You can use DES implementation from any cryptographic li-braries.  (2 marks)
+-- Implement 3-DES encryption.  You can use DES implementation from any cryptographic libraries.  (2 marks)
 -- Assume that Alice and Bob know each other's public key at the beginning. 
 -- Implement the Counter (CTR) Mode.  (2 marks)
 -- Show that Alice and Bob can send/receive messages by using 3-DES with CTR mode after the secure session established.  Assume that each message will be in 64 bytes.  (3 marks)
 -- You can use socket programming or simulate message sending/receiving by using function calls. 
 -- You MUST use BigIntegers (Java) or NTL (C++) to handle large number computation. 
  Note that, the RSA key size must be at least 1024-bit. 
+System and Network Security Assignment 3 by Binbin Wang C3214157
 - 此方法中所需的任何公钥加密或数字签名方案都将基于RSA。
 - 此方法中应用的任何对称密钥加密都是3-DES。
-- 此方法中使用的任何哈希函数都是SHA-256。
- 您可以使用外部库中的实现。
-
+- 此方法中使用的任何哈希函数都是SHA-256。 您可以使用外部库中的实现。
 - 实施STS协议。 （3分）
 - 实施RSA加密和签名，因为您无法直接从外部库中使用它。 （2分）
-- 实施3-DES加密。 您可以从任何加密语言中使用DES实现。 （2分）
+- 实施3-DES加密。您可以使用任何加密库中的DES实现。 （2分）
 - 假设Alice和Bob在开头就知道对方的公钥。
-- 实施计数器（CTR）模式。 （2分）http://www.cnblogs.com/kisf/articles/5315397.html
+- 实施计数器（CTR）模式。 （2分）
 - 显示在建立安全会话后，Alice和Bob可以使用具有CTR模式的3-DES发送/接收消息。 假设每条消息都是64字节。 （3分）
 - 您可以使用套接字编程或使用函数调用模拟消息发送/接收。
 - 您必须使用BigIntegers（Java）或NTL（C ++）来处理大量计算。
