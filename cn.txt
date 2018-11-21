@@ -45,18 +45,19 @@ For example, a stored record could express the relationship between tag's identi
 - 云系统：它是一个值得信赖的机构，为用户和快递员提供服务。基本上，它具有以下功能。
 
      - 它可以注册新用户并为登录提供安全的用户身份验证。
-     - 它可以将快递员注册为客户端，并提供安全的客户端身份验证。请注意，快递员不拥有RFID标签或其信息，例如标签的标识符和标签的位置。
+     - 它可以将快递员注册为客户端，并提供安全的客户端身份验证。请注意，快递员不拥有RFID标签或其信息， 例如标签的标识符和标签的位置。
      - 当快递员交付货物时，它允许用户授权快递员管理/访问特定的RFID标签组。也就是说，将允许快递员收集标签信息。
-     - 它提供标签的密钥管理。云系统可以生成，传输和维护标签密钥，但这不是强制性要求。云系统是否知道标签的密钥（密钥）将由底层加密技术确定。
+         -它提供标签的密钥管理。云系统可以生成，传输和维护标签密钥，但这不是强制性要求。 云系统是否知道标签的密钥（密钥）将由底层加密技术确定。
+
      - 它可以帮助授权客户（快递员）识别（验证）RFID标签。云系统将涉及RFID标签认证，然后将结果响应给认证的客户端。
 
--- 快递员: It is an organisation which provides delivery services to users.  It provides an applica-tion that users can trace and collect current goods information from it.  A courier is the entity who has RFID readers. 
+-- courier: It is an organisation which provides delivery services to users.  It provides an applica-tion that users can trace and collect current goods information from it.  A courier is the entity who has RFID readers. 
 
     -- RFID reader: It can interrogate tags, but it cannot decide whether a tag is valid or not. Instead, reader typically transfer the information to backend server who has capability to conduct tag authentication. 
 
     -- RFID tag: We consider lightweight RFID tags which have limited memory and compu- tational power. 
  For example, the memory size of a tag is 1KB.  This memory will be used for all storage, including tag identifier, system parameters, keys, intermediate results and others. More powerful tags usually mean higher cost to users.  Note that a lightweight tag does not have time system and it cannot access network. 
-- 信使: 这是一个为用户提供送货服务的组织。 它提供了一个应用程序，用户可以从中跟踪和收集当前的货物信息。 快递员是拥有RFID阅读器的实体。
+- 快递员: 这是一个为用户提供送货服务的组织。 它提供了一个应用程序，用户可以从中跟踪和收集当前的货物信息。 快递员是拥有RFID阅读器的实体。
 
      - RFID阅读器：它可以询问标签，但无法确定标签是否有效。 相反，读者通常会将信息传输到有能力进行标签身份验证的后端服务器。
      - RFID标签：我们认为轻量级RFID标签具有有限的内存和计算能力。
